@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Data;
 using System.Linq;
 using System.Windows;
 
@@ -10,26 +9,17 @@ namespace Lf_progra
     /// </summary>
     public partial class MainWindow : Window
     {
-        List<char> _numeros = new List<char>(new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' });
-        List<char> _variables = new List<char>(new char[] { 'A', 'B', 'C','D','E','F','G','H','I','J',
-                                'K','L','M','N','Ñ','O','P','Q','R','S','T','U','V','W','X','Y','Z'});
-        List<char> _operadores = new List<char>(new char[] { '+', '-', '*', '/' });
-        List<char> _delimitadores = new List<char>(new char[] { '(', ')' });
-        DataTable _tblResultados = new DataTable();
+
+        private string palabra;
+        private string[] conjuntoCadena;
 
         public MainWindow()
         {
             InitializeComponent();
+            txtResultados.IsEnabled = false;
         }
 
-        // private void frmPrincipal_Load(object sender, EventArgs e)
-        // {
-        //_tblResultados.Columns.Add("Token", typeof(char));
-        //  _tblResultados.Columns.Add("Tipo", typeof(string));
-        //}
-
-
-
+        //funcionalidad del boton limpiar que limpia los cuadros de texto
         private void Boton_Limpiar(object sender, RoutedEventArgs e)
         {
             /*Codigo del boton */
@@ -37,70 +27,62 @@ namespace Lf_progra
             txtResultados.Clear();
         }
 
+        //funcionalidad del boton analizar 
         private void Boton_Analizar(object sender, RoutedEventArgs e)
         {
             /*Codigo del boton */
-            // Console.WriteLine("Le has dado al boton 2");
+            palabra = txtExpresion.Text;
+            conjuntoCadena = palabra.Split(' ');
 
-
-
-            List<char> _elementos = txtExpresion.Text.Replace(" ", "").ToCharArray().ToList();
-
-            if (_elementos.Count > 0)
+            for (int i = 0; i < conjuntoCadena.Length; i++)
             {
-              //  DataRow _fila;
+                string local = conjuntoCadena[i].ToString();
+                int esnumero = 0;
+                decimal esdecimal = 0;
 
-                foreach (char elemento in _elementos)
+                //determina si es numero entero
+                if ((int.TryParse(local, out esnumero)) == true)
                 {
-                   /// _fila = _tblResultados.NewRow();
 
-                    if (_numeros.Contains(elemento))
+                    txtResultados.AppendText("token =  " + esnumero + " >> es de tipo numero entero \n");
+                }
+                //determina si es un numero  decimal
+                else if ((decimal.TryParse(local, out esdecimal)) == true)
+                {
+
+                    txtResultados.AppendText("token =  " + esdecimal + " >> es de tipo numero decimal \n");
+                }
+                //determina si el conjunto de caracteres es una palabra o es una moneda
+                else if (char.IsNumber(local, 0) == false)
+                {
+                    char[] chars = local.ToCharArray();
+                    if (chars[0].Equals('Q'))
                     {
-                        //String nuevo = elemento.ToString();
-                        // _fila["Token"] = elemento;
-                        //  _fila["Tipo"] = "Número";
-                        txtResultados.AppendText("token= " + elemento.ToString() + " de tipo numero\n"); // = elemento;
-                        //_fila["Tipo"] = "Número";
-                    }
-                    else if (_variables.Contains(elemento.ToString().ToUpper()[0]))
+                        string valor = "";
+                        for (int ctr = 1; ctr < chars.Length; ctr++)
+                        {
+                            valor += chars[ctr].ToString();
+                        }
+                        if ((decimal.TryParse(valor, out esdecimal)) == true)
+                        {
+                            txtResultados.AppendText("token =  " + local + " >> es de tipo moneda \n");
+
+                        } else
+                        {
+                            txtResultados.AppendText("token =  " + local + " >> es de tipo palabra \n");
+
+                        }
+
+                    } else
                     {
-                        txtResultados.AppendText("token= " + elemento.ToString() + " de tipo variable\n");
+                        txtResultados.AppendText("token =  " + local + " >> es de tipo palabra \n");
                     }
-                    else if (_operadores.Contains(elemento))
-                    {
-                        txtResultados.AppendText("token= " + elemento.ToString() + " de tipo operador\n"); // = elemento;
-
-                    }
-                    else if (_delimitadores.Contains(elemento))
-                    {
-                        txtResultados.AppendText("token= " + elemento.ToString() + " de tipo delimitador\n"); // = elemento;
-
-
-                    }
-                    else
-                    {
-                        txtResultados.AppendText("token= " + elemento.ToString() + " de tipo signo\n"); // = elemento;
-
-
-                    }
-                    // _tblResultados.Rows.Add(_fila);
-                    //txtResultados.AppendText("");
 
                 }
 
-
-                //dgvResultados.DataSource = _tblResultados;
-                // dgvResultados.Refresh();
             }
-            else
-            {
-                // dgvResultados.DataSource = null;
-                //dgvResultados.Refresh();
-            }
-
 
         }
-
 
     }
 }
