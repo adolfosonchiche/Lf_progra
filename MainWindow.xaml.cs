@@ -10,7 +10,7 @@ namespace Lf_progra
     public partial class MainWindow : Window
     {
 
-        private string palabra;
+        private string cadenaUsuario;
         private string[] conjuntoCadena;
 
         public MainWindow()
@@ -19,7 +19,7 @@ namespace Lf_progra
             txtResultados.IsEnabled = false;
         }
 
-        //funcionalidad del boton limpiar que limpia los cuadros de texto
+        /*funcionalidad del boton limpiar que limpia los cuadros de texto*/
         private void Boton_Limpiar(object sender, RoutedEventArgs e)
         {
             /*Codigo del boton */
@@ -27,35 +27,24 @@ namespace Lf_progra
             txtResultados.Clear();
         }
 
-        //funcionalidad del boton analizar 
+        /*funcionalidad del boton analizar*/ 
         private void Boton_Analizar(object sender, RoutedEventArgs e)
         {
             /*Codigo del boton */
-            palabra = txtExpresion.Text;
-            conjuntoCadena = palabra.Split(' ');
+            cadenaUsuario = txtExpresion.Text;
+            conjuntoCadena = cadenaUsuario.Split(' ');
 
             for (int i = 0; i < conjuntoCadena.Length; i++)
             {
-                string local = conjuntoCadena[i].ToString();
+                string palabraAuxiliar = conjuntoCadena[i].ToString();
                 int esnumero = 0;
                 decimal esdecimal = 0;
 
-                //determina si es numero entero
-                if ((int.TryParse(local, out esnumero)) == true)
+                
+                /*determina si el conjunto de caracteres es una palabra o es una moneda*/
+                if (char.IsNumber(palabraAuxiliar, 0) == false)
                 {
-
-                    txtResultados.AppendText("token =  " + esnumero + " >> es de tipo numero entero \n");
-                }
-                //determina si es un numero  decimal
-                else if ((decimal.TryParse(local, out esdecimal)) == true)
-                {
-
-                    txtResultados.AppendText("token =  " + esdecimal + " >> es de tipo numero decimal \n");
-                }
-                //determina si el conjunto de caracteres es una palabra o es una moneda
-                else if (char.IsNumber(local, 0) == false)
-                {
-                    char[] chars = local.ToCharArray();
+                    char[] chars = palabraAuxiliar.ToCharArray();
                     if (chars[0].Equals('Q'))
                     {
                         string valor = "";
@@ -65,19 +54,31 @@ namespace Lf_progra
                         }
                         if ((decimal.TryParse(valor, out esdecimal)) == true)
                         {
-                            txtResultados.AppendText("token =  " + local + " >> es de tipo moneda \n");
+                            txtResultados.AppendText("token =  " + palabraAuxiliar + " >> es de tipo moneda \n");
 
                         } else
                         {
-                            txtResultados.AppendText("token =  " + local + " >> es de tipo palabra \n");
+                            txtResultados.AppendText("token =  " + palabraAuxiliar + " >> es de tipo palabra \n");
 
                         }
 
                     } else
                     {
-                        txtResultados.AppendText("token =  " + local + " >> es de tipo palabra \n");
+                        txtResultados.AppendText("token =  " + palabraAuxiliar + " >> es de tipo palabra \n");
                     }
 
+                }
+                /*determina si es numero entero*/
+                else if ((int.TryParse(palabraAuxiliar, out esnumero)) == true)
+                {
+
+                    txtResultados.AppendText("token =  " + esnumero + " >> es de tipo numero entero \n");
+                }
+                /*determina si es un numero  decimal*/
+                else if ((decimal.TryParse(palabraAuxiliar, out esdecimal)) == true)
+                {
+
+                    txtResultados.AppendText("token =  " + esdecimal + " >> es de tipo numero decimal \n");
                 }
 
             }
