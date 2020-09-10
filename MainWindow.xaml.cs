@@ -78,6 +78,8 @@ namespace Lf_progra
                         txtResultados.AppendText("token =  " + local + " >> es de tipo palabra \n");
                     }
 
+                    MessageBox.Show("Archivo creado.");
+
                 }
 
             }
