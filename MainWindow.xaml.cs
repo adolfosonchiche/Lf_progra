@@ -67,6 +67,8 @@ namespace Lf_progra
                         txtResultados.AppendText("token =  " + palabraAuxiliar + " >> es de tipo palabra \n");
                     }
 
+                    MessageBox.Show("Archivo creado.");
+
                 }
                 /*determina si es numero entero*/
                 else if ((int.TryParse(palabraAuxiliar, out esnumero)) == true)
